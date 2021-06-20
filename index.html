@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="Keywords" content="Konwerter">
+		<meta name="Description" content="Konwerter z dziesietnego na u1 oraz u2">
+		<meta name="Author" content="Patryk Zych i Marcin Szulc 2T3">
+		<link rel="Stylesheet" href="stylesheet.css" type="text/css">
+		<link rel="icon" href="grafika/icon.jpeg">
+		<title>Konwerter U1 oraz U2</title>
+</head>
+<body>
+
+	
+	<div class="naglowek">
+            Konwerter z dziesiętnego na U1
+    </div>
+ 
+    <div class="srodek">
+        <p>
+            <label>Kod z dziesiętnego na U1</label>
+            <input id="dziesietna" type="number" placeholder="Podaj liczbę dziesiętną"
+            onchange="naU1(this.value)">
+        </p>
+        <p>Liczba U1: <span id="liczbaU1"></span></p>
+ 
+        <label>Kod z U1 na dziesiętny </label>
+        <input id="U1" type="number" placeholder="Podaj liczbę w U1"
+        onchange="na101(this.value)">
+ 
+    <p>Liczba dziesiętna: <span id="liczba101"></span></p>
+ 
+    </div>
+	
+	<div class="naglowek">
+			Konwerter z dziesiętnego na U2
+	</div>
+
+	<div class="srodek">
+		<p>
+			<label>Kod z dziesiętnego na U2</label>
+			<input id="dziesietna" type="number" placeholder="Podaj liczbę dziesiętną"
+			onchange="naU2(this.value)">
+		</p>
+		<p>Liczba U2: <span id="liczbaU2"></span></p>
+
+		<label title="Remember: Positive numbers start with 0, negative numbers with 1">Kod z U2 na dziesiętny </label>
+		<input id="U2" type="number" placeholder="Podaj liczbę w U2"
+		onchange="na10(this.value)">
+	</p>
+	<p>Liczba dziesiętna: <span id="liczba10"></span></p>
+
+	</div>
+	
+
+	<script>
+		const BITS = 32; // JavaScript działa na 32 bitowych liczbach
+
+
+		// Konwertuje z (10) na (2) (Two's complement)
+		function dec2bin(dec) {
+			return (dec >>> 0).toString(2);
+		}
+
+		
+		
+		// zmiana wyglądu wyniku
+		function beautify(bin, isNegative) {
+			if (!isNegative)
+				bin = bin.padStart(BITS, '0');
+			return bin.replace(/(\d{4})/g, '$1 ');
+		}
+		
+		// Konwertuje dziesiętną liczbę ( z łańcucha ) na binarną i wyświetla w "liczbaU2"
+		function naU2(strNumber) {
+			console.log("Konwertuje na  U2", strNumber);
+			var number = parseInt(strNumber, 10);
+			var isNegative = number < 0;
+			var result = dec2bin(number);
+			document.getElementById("liczbaU2").innerHTML = beautify(result, isNegative);
+		}
+		
+		// Konwertuje binarny ( z łańcucha ) na dziesiętny i wyświetla w "liczba10"
+		function na10(strNumberInTwosComplement) {
+			console.log("Konwertuje do dziesiętnych", strNumberInTwosComplement);
+			// W przypadku nie podania liczby binarnej
+			if (/[^01]/.test(strNumberInTwosComplement)) {
+				document.getElementById("liczba10").innerHTML = "Podaj liczbę binarną XD";
+				return;
+			}
+			// wypełnia od lewej 1 albo 0 w zależności od podanej liczby
+			var paddedNumber = strNumberInTwosComplement.padStart(BITS, strNumberInTwosComplement[0]);
+			var liczba10 = ~~parseInt(paddedNumber, 2);
+			document.getElementById("liczba10").innerHTML = liczba10;
+		}
+		
+		// ------------------------------------------------------------------------- (u1)
+		 var BITS1 = 8;
+   
+        // Konwertuje z (10) na binarny
+        function dec2bin1(dec1)
+        {
+            var bin1 = Math.abs(dec1).toString(2);//abs - wartość bezwzgledna bo JS nie działa na ujemnych  
+            var isNegative1 = dec1 < 0 || dec1 == -0; // 1111 = -0 ; 0000=0
+            var newBin1 = ""; // oddzielna zmienna, bo nie mozna na stringach wszystkiego wykonywać
+ 
+            if(isNegative1) // negacja, koniecznie na dodatnich
+            {
+                for(var i=0; i<bin1.length; i++) // negujemy pętlaą tylko wtedy jeżeli liczba jest ujemna
+                {
+                    if (bin1[i] == '0')
+                    newBin1 += '1';
+                    else
+                    newBin1 += '0';
+                }
+            }
+            else
+            newBin1=bin1; // w przeciwnym wypadku wartość jest równa zmiennej bin, która jest po prostu zamieniona
+     
+            BITS1 = bin1.length+1; // dodajemy 1 długość do string'a, żeby móc korzystać z najbardziej znaczącego bitu
+       
+            if (!isNegative1) // jeżeli jest dodatnia
+                newBin1 = newBin1.padStart(BITS1, '0'); // w miejsce MSB wchodzi 0
+            else
+                newBin1 = newBin1.padStart(BITS1, '1'); // w miejsce MSB wchodzi 1
+            return newBin1;
+   
+        }
+   
+        // Konwertuje z (10) (jako stringi) do formy binarnej i zapisuje w "liczbaU1"
+        function naU1(strNumber1)
+        {
+            var number1 = parseInt(strNumber1, 10); // przypisuje liczbę number jako tylko (10)
+            var isNegative1 = number1 < 0;
+            var result1 = dec2bin1(number1); // result = liczba binarna
+            document.getElementById("liczbaU1").innerHTML/*podmiana tekstu*/ = result1;
+        }
+       
+        // Konwertuje binarną do stringa do postaci (10) i przekazuje jako "liczba10"
+        function na101(strNumber1)
+        {
+            var newBin1="";// nowa zmienna aby móc pracować na stringach
+           
+            if (/[^01]/.test(strNumber1)) // sprawdza czy nie została wpisana liczba inna niż binarna
+            {
+                document.getElementById("liczba101").innerHTML = "Wprowadź liczbę binarną!";
+                return;
+            }
+           
+           
+            if(strNumber1[0]==1)
+            {
+                for(var i=0; i<strNumber1.length; i++) // odwraca liczby, tak samo jak w przypadku z (10) na U1, ale teraz przywracamy do normalnej postaci
+                {
+                    if (strNumber1[i] == '0')
+                    newBin1 += '1';
+                    else
+                    newBin1 += '0';
+                }
+            }
+            else
+            newBin1=strNumber1;
+           
+            var liczba101 = parseInt(newBin1, 2); // zmienia z (10) na binarny, a także ze Stringa na Int
+            if(strNumber1[0] == 1) // jezeli jest ujemna trzeba dodać minus, żeby był ładny wynil
+            liczba101 = "-" + liczba101;
+            document.getElementById("liczba101").innerHTML = liczba101;
+        }
+
+	</script>
+</body>
+</html>

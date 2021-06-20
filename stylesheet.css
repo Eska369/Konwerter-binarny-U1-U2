@@ -1,0 +1,23 @@
+body{
+		background-image: url("grafika/tlo.png");
+}
+
+.naglowek{
+	height: 80px;
+	width: 100%;
+	background-color: #435643;
+	color: White;
+	text-align: center;
+	font-size: 40px;
+	font-family: fantasy;
+	text-shadow: 3px 3px #000;
+}
+.srodek{
+text-align: center;
+font-family: fantasy;
+font-size: 30px;
+}
+
+.stopka{
+
+}
